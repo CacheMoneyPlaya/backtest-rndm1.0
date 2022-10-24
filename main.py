@@ -39,6 +39,9 @@ class FvgContainAndReject(bt.Strategy):
             # print('Date {}, Open {} , Close, {} , Low, {}, High, {}'.format(self.dataclose.datetime[-1], self.dataclose.open[-1], self.dataclose.close[-1], self.dataclose.low[-1], self.dataclose.high[-1]))
             self.fvg.cycle_chunk(self.dataclose)
 
+            print('finished')
+            exit()
+
         # Need to be able to provide a chunk of data to some arbitrary method i.e. all of dataclose data from 0 -> -300
         # Method then takes data in steps of 3 i.e. -300,-299,-298
         # We make two checks using:
