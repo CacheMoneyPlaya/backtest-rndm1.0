@@ -11,6 +11,8 @@ from Indicators.Fvg import Fvg
 # Import the backtrader platform
 import backtrader as bt
 
+# Charting
+from Charting import chart_utils as cu
 
 # Create a Stratey
 class FvgContainAndReject(bt.Strategy):
@@ -30,46 +32,12 @@ class FvgContainAndReject(bt.Strategy):
         # Simply log the closing price of the series from the reference
         try:
             self.data_history_index += 1
-            # print('Date {}, Open {} , Close, {} , Low, {}, High, {}'.format(self.dataclose.datetime[0], self.dataclose.open[0], self.dataclose.close[0], self.dataclose.low[0], self.dataclose.high[0]))
         except Exception as e:
             pass
 
-        if self.data_history_index > 301:
-            # print('previous values were')
-            # print('Date {}, Open {} , Close, {} , Low, {}, High, {}'.format(self.dataclose.datetime[-1], self.dataclose.open[-1], self.dataclose.close[-1], self.dataclose.low[-1], self.dataclose.high[-1]))
-            self.fvg.cycle_chunk(self.dataclose)
-
-            print('finished')
-            exit()
-
-        # Need to be able to provide a chunk of data to some arbitrary method i.e. all of dataclose data from 0 -> -300
-        # Method then takes data in steps of 3 i.e. -300,-299,-298
-        # We make two checks using:
-        # Positive delta checking close1 < close2 < close3
-        # Negative delta checking close1 > close2 > close3
-        #
-        # See if we have any fvg's between these, will need to find a way to see if they have been historically invalidated
-        # So after finding these fvg's look at all closes from point of fvg onwards for any positions where said close has moved higher or lower
-        # This could be quite intensive to run but on something like 15 min could be ok
-        #
-        # Once we have the FVG's identified we will need to check to see if current candle closes outside + previous closes in which is all thats needed, yeah we can
-        # get more technical with it having x number of candles not closing in etc
-
-
-
-
-        # Create a grouping of FVG's that have previously existed in last 600 days and check no closes
-        # have happened above them i.e. still active in both directions, this being run on any
-        # new candle close will mean we will be able to remove invalidated before calling
-
-        # Run a check to see if we have had any candles close below or above it
-        # that do not include the candle that formed it so point of creation + 1
-
-        # Then check we have had any entries into the fvg which have closed inside
-
-        # Then check we have any that have closed outside in the direction of the bias
-
-        # Make decision based on this
+        if self.data_history_index > 601:
+            self.fvg_data_points = self.fvg.cycle_chunk(self.dataclose)
+            cu.chart_fvg(self.fvg_data_points)
 
 
 if __name__ == '__main__':

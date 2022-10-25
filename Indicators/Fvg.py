@@ -1,4 +1,8 @@
+from Utils import num_func as nf
+
 class Fvg():
+
+    FVG_DELTA_THRESHOLD = 2
 
     def __init__(self):
         self.fvg_tracker = {
@@ -8,21 +12,14 @@ class Fvg():
 
     def cycle_chunk(self, chunk):
 
-        print('running check on data')
-        # print('Date {}, Open {} , Close, {} , Low, {}, High, {}'.format(chunk.datetime[0], chunk.open[0], chunk.close[0], chunk.low[0], chunk.high[0]))
-
-
-        for i in range(-300, 1, 1):
-
+        for i in range(-600, 1, 1):
             try:
                 # Index through all data taking 3 at a time
-                print('running check on chunk')
                 self.get_movement_delta(chunk, i)
             except Exception as e:
                 raise
 
-        print(self.fvg_tracker)
-
+        return self.fvg_tracker
 
         # Compare gradient both directions
         # if we have a criteria met we then check n-1 of n=3 meets following:
@@ -36,22 +33,21 @@ class Fvg():
         # or under + fvg's
         # then we look at current time frame and run the following checks/scenarios
 
-    def sanitize_invalidated_value_gaps(self):
-        print('sanitizing')
-
-    def profile_value_gap(self):
-        print('profiling value gap')
 
     def get_movement_delta(self, chunk, index) -> int:
         # Signifies bull FVG
         if chunk.high[index] < chunk.low[index+2] and chunk.high[index] > chunk.open[index+1] and chunk.low[index+2] < chunk.close[index+1]:
-            self.fvg_tracker['delta_p'].append({
-                'fvg_high': chunk.low[index+2],
-                'fvg_low': chunk.high[index],
-            })
+            if nf.pct_delta(chunk.high[index], chunk.low[index+2]) >= self.FVG_DELTA_THRESHOLD:
+                self.fvg_tracker['delta_p'].append({
+                    'fvg_high': chunk.low[index+2],
+                    'fvg_low': chunk.high[index],
+                    # 'fvg_timestamp': chunk.datetime[index+2]
+                })
         # Signifies bear FVG
         if chunk.low[index] > chunk.high[index+2] and chunk.low[index] < chunk.open[index+1] and chunk.high[index+2] > chunk.close[index+1]:
-            self.fvg_tracker['delta_n'].append({
-                'fvg_high': chunk.low[index],
-                'fvg_low': chunk.high[index+2]
-            })
+            if nf.pct_delta(chunk.high[index+2], chunk.low[index]) >= self.FVG_DELTA_THRESHOLD:
+                self.fvg_tracker['delta_n'].append({
+                    'fvg_high': chunk.low[index],
+                    'fvg_low': chunk.high[index+2],
+                    # 'fvg_timestamp': chunk.datetime[index+2]
+                })
