@@ -11,13 +11,15 @@ class Fvg():
         }
 
     def cycle_chunk(self, chunk):
-
+        self.chunk = chunk
         for i in range(-600, 1, 1):
             try:
                 # Index through all data taking 3 at a time
                 self.get_movement_delta(chunk, i)
             except Exception as e:
                 raise
+
+        self.remove_invalidated_fvg_zones()
 
         return self.fvg_tracker
 
@@ -33,6 +35,27 @@ class Fvg():
         # or under + fvg's
         # then we look at current time frame and run the following checks/scenarios
 
+    def remove_invalidated_fvg_zones(self):
+        # Go through all the fvgs in delta_p/n
+        # Take the index of the fvg start in the chunk
+        # and see if the price level at each index after the start
+        # of the fvg closes below the bottom oft he fvg for delta_p
+        # and if the candle closes above the fvg for delta_n
+
+        for idx, x in enumerate(self.fvg_tracker['delta_p']):
+            for i in range(x['fvg_chunk_index'], 1, 1):
+                if self.chunk.close[i] < x['fvg_low']:
+                    # Remove this fvg from the dict
+                    del self.fvg_tracker['delta_p'][idx]
+                    break
+
+        for idx, x in enumerate(self.fvg_tracker['delta_n']):
+            for i in range(x['fvg_chunk_index'], 1, 1):
+                if self.chunk.close[i] > x['fvg_high']:
+                    # Remove this fvg from the dict
+                    del self.fvg_tracker['delta_n'][idx]
+                    break
+        print(self.fvg_tracker)
 
     def get_movement_delta(self, chunk, index) -> int:
         # Signifies bull FVG
@@ -41,7 +64,8 @@ class Fvg():
                 self.fvg_tracker['delta_p'].append({
                     'fvg_high': chunk.low[index+2],
                     'fvg_low': chunk.high[index],
-                    # 'fvg_timestamp': chunk.datetime[index+2]
+                    'fvg_timestamp': chunk.datetime.date(0),
+                    'fvg_chunk_index': index+2
                 })
         # Signifies bear FVG
         if chunk.low[index] > chunk.high[index+2] and chunk.low[index] < chunk.open[index+1] and chunk.high[index+2] > chunk.close[index+1]:
@@ -49,5 +73,6 @@ class Fvg():
                 self.fvg_tracker['delta_n'].append({
                     'fvg_high': chunk.low[index],
                     'fvg_low': chunk.high[index+2],
-                    # 'fvg_timestamp': chunk.datetime[index+2]
+                    'fvg_timestamp': chunk.datetime.date(0),
+                    'fvg_chunk_index': index+2
                 })

@@ -3,8 +3,10 @@ import matplotlib.pyplot as plt
 from mpl_finance import candlestick_ohlc
 import pandas as pd
 import matplotlib.dates as mpl_dates
+import matplotlib.patches as mpatches
+import datetime as dt
 
-def chart_fvg(fvg_data_points):
+def chart_fvg(fvg_data_points, x_current):
     plt.style.use('ggplot')
 
     # Extracting Data for plotting
@@ -30,6 +32,8 @@ def chart_fvg(fvg_data_points):
     fig.autofmt_xdate()
 
     fig.tight_layout()
+
+    ax.axvline(dt.datetime(2008, 6, 7))
 
     for dp in fvg_data_points['delta_p']:
         plt.axhspan(dp['fvg_low'], dp['fvg_high'], color='green', alpha=0.5, lw=0)
