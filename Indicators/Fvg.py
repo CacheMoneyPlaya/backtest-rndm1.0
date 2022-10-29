@@ -41,7 +41,6 @@ class Fvg():
         # and see if the price level at each index after the start
         # of the fvg closes below the bottom oft he fvg for delta_p
         # and if the candle closes above the fvg for delta_n
-
         for idx, x in enumerate(self.fvg_tracker['delta_p']):
             for i in range(x['fvg_chunk_index'], 1, 1):
                 if self.chunk.close[i] < x['fvg_low']:
@@ -55,7 +54,6 @@ class Fvg():
                     # Remove this fvg from the dict
                     del self.fvg_tracker['delta_n'][idx]
                     break
-        print(self.fvg_tracker)
 
     def get_movement_delta(self, chunk, index) -> int:
         # Signifies bull FVG
@@ -64,7 +62,7 @@ class Fvg():
                 self.fvg_tracker['delta_p'].append({
                     'fvg_high': chunk.low[index+2],
                     'fvg_low': chunk.high[index],
-                    'fvg_timestamp': chunk.datetime.date(0),
+                    'fvg_timestamp': chunk.datetime.date(index),
                     'fvg_chunk_index': index+2
                 })
         # Signifies bear FVG
@@ -73,6 +71,6 @@ class Fvg():
                 self.fvg_tracker['delta_n'].append({
                     'fvg_high': chunk.low[index],
                     'fvg_low': chunk.high[index+2],
-                    'fvg_timestamp': chunk.datetime.date(0),
+                    'fvg_timestamp': chunk.datetime.date(index),
                     'fvg_chunk_index': index+2
                 })

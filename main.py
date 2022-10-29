@@ -37,6 +37,7 @@ class FvgContainAndReject(bt.Strategy):
 
         if self.data_history_index > 601:
             self.fvg_data_points = self.fvg.cycle_chunk(self.dataclose)
+            print(self.fvg_data_points)
             cu.chart_fvg(self.fvg_data_points, self.dataclose.datetime[0])
 
 
