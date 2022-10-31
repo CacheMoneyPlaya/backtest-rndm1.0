@@ -5,12 +5,14 @@ import pandas as pd
 import matplotlib.dates as mpl_dates
 import matplotlib.patches as mpatches
 import datetime as dt
+from matplotlib.patches import Rectangle
 
 def chart_fvg(fvg_data_points, x_current):
     plt.style.use('ggplot')
+    context = mpl_dates.date2num(x_current)
 
     # Extracting Data for plotting
-    data = pd.read_csv('Datasets/GOOG.csv')
+    data = pd.read_csv('Datasets/GOOG.csv').head(601)
     ohlc = data.loc[:, ['Date', 'Open', 'High', 'Low', 'Close']]
     ohlc['Date'] = pd.to_datetime(ohlc['Date'])
     ohlc['Date'] = ohlc['Date'].apply(mpl_dates.date2num)
@@ -33,12 +35,20 @@ def chart_fvg(fvg_data_points, x_current):
 
     fig.tight_layout()
 
-    ax.axvline(dt.datetime(2008, 6, 7))
+    print(fvg_data_points['delta_n'])
 
     for dp in fvg_data_points['delta_p']:
-        plt.axhspan(dp['fvg_low'], dp['fvg_high'], color='green', alpha=0.5, lw=0)
+        # if not dp['fvg_invalidated']:
+            start = mpl_dates.date2num(dp['fvg_timestamp'])
+            date_delta = context-start
+            fvg_delta = dp['fvg_high'] - dp['fvg_low']
+            ax.add_patch(Rectangle((start, dp['fvg_low']), date_delta, fvg_delta, color='green', alpha=0.5))
 
     for dp in fvg_data_points['delta_n']:
-        plt.axhspan(dp['fvg_low'], dp['fvg_high'], color='red', alpha=0.5, lw=0)
+        # if not dp['fvg_invalidated']:
+            start = mpl_dates.date2num(dp['fvg_timestamp'])
+            date_delta = context-start
+            fvg_delta = dp['fvg_high'] - dp['fvg_low']
+            ax.add_patch(Rectangle((start, dp['fvg_low']), date_delta, fvg_delta, color='red', alpha=0.5))
 
     plt.show()

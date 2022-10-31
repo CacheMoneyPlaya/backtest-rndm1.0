@@ -42,17 +42,19 @@ class Fvg():
         # of the fvg closes below the bottom oft he fvg for delta_p
         # and if the candle closes above the fvg for delta_n
         for idx, x in enumerate(self.fvg_tracker['delta_p']):
+            self.fvg_tracker['delta_p'][idx]['fvg_invalidated'] = False
             for i in range(x['fvg_chunk_index'], 1, 1):
                 if self.chunk.close[i] < x['fvg_low']:
-                    # Remove this fvg from the dict
-                    del self.fvg_tracker['delta_p'][idx]
+                    # Mark as invalidated
+                    self.fvg_tracker['delta_p'][idx]['fvg_invalidated'] = True
                     break
 
         for idx, x in enumerate(self.fvg_tracker['delta_n']):
+            self.fvg_tracker['delta_n'][idx]['fvg_invalidated'] = False
             for i in range(x['fvg_chunk_index'], 1, 1):
                 if self.chunk.close[i] > x['fvg_high']:
-                    # Remove this fvg from the dict
-                    del self.fvg_tracker['delta_n'][idx]
+                    # Mark as invalidated
+                    self.fvg_tracker['delta_n'][idx]['fvg_invalidated'] = True
                     break
 
     def get_movement_delta(self, chunk, index) -> int:

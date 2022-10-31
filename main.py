@@ -27,6 +27,7 @@ class FvgContainAndReject(bt.Strategy):
         self.dataclose = self.datas[0]
         self.data_history_index = 0
         self.fvg = Fvg()
+        self.count = 0
 
     def next(self):
         # Simply log the closing price of the series from the reference
@@ -37,8 +38,8 @@ class FvgContainAndReject(bt.Strategy):
 
         if self.data_history_index > 601:
             self.fvg_data_points = self.fvg.cycle_chunk(self.dataclose)
-            print(self.fvg_data_points)
-            cu.chart_fvg(self.fvg_data_points, self.dataclose.datetime[0])
+            cu.chart_fvg(self.fvg_data_points, self.dataclose.datetime.date(0))
+            exit()
 
 
 if __name__ == '__main__':
