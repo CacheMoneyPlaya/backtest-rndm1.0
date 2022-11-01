@@ -2,7 +2,7 @@ from Utils import num_func as nf
 
 class Fvg():
 
-    FVG_DELTA_THRESHOLD = 2
+    FVG_DELTA_THRESHOLD = 0.5
 
     def __init__(self):
         self.fvg_tracker = {
@@ -11,8 +11,9 @@ class Fvg():
         }
 
     def cycle_chunk(self, chunk):
+        self.reset_fvg_tracker()
         self.chunk = chunk
-        for i in range(-600, 1, 1):
+        for i in range(-2000, 1, 1):
             try:
                 # Index through all data taking 3 at a time
                 self.get_movement_delta(chunk, i)
@@ -34,6 +35,12 @@ class Fvg():
         # Simply look for any closes within data chunk that have either gone over - fvg's
         # or under + fvg's
         # then we look at current time frame and run the following checks/scenarios
+
+    def reset_fvg_tracker(self):
+        self.fvg_tracker = {
+            'delta_p': [],
+            'delta_n': [],
+        }
 
     def remove_invalidated_fvg_zones(self):
         # Go through all the fvgs in delta_p/n
@@ -64,7 +71,7 @@ class Fvg():
                 self.fvg_tracker['delta_p'].append({
                     'fvg_high': chunk.low[index+2],
                     'fvg_low': chunk.high[index],
-                    'fvg_timestamp': chunk.datetime.date(index),
+                    'fvg_timestamp': chunk.datetime.datetime(index),
                     'fvg_chunk_index': index+2
                 })
         # Signifies bear FVG
@@ -73,6 +80,6 @@ class Fvg():
                 self.fvg_tracker['delta_n'].append({
                     'fvg_high': chunk.low[index],
                     'fvg_low': chunk.high[index+2],
-                    'fvg_timestamp': chunk.datetime.date(index),
+                    'fvg_timestamp': chunk.datetime.datetime(index),
                     'fvg_chunk_index': index+2
                 })

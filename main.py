@@ -36,9 +36,10 @@ class FvgContainAndReject(bt.Strategy):
         except Exception as e:
             pass
 
-        if self.data_history_index > 601:
+        if self.data_history_index > 2001:
             self.fvg_data_points = self.fvg.cycle_chunk(self.dataclose)
-            cu.chart_fvg(self.fvg_data_points, self.dataclose.datetime.date(0))
+            self.count +=1
+            cu.chart_fvg(self.fvg_data_points, self.dataclose.datetime.datetime(0))
             exit()
 
 
@@ -52,17 +53,23 @@ if __name__ == '__main__':
     # Datas are in a subfolder of the samples. Need to find where the script is
     # because it could have been called from anywhere
     modpath = os.path.dirname(os.path.abspath(sys.argv[0]))
-    datapath = os.path.join(modpath, 'Datasets/GOOG.csv')
+    datapath = os.path.join(modpath, 'Datasets/Data/btc_binance_datetime.csv')
 
     # Create a Data Feed
-    data = bt.feeds.YahooFinanceCSVData(
+    data = bt.feeds.GenericCSVData(
         dataname=datapath,
-        # Do not pass values before this date
-        fromdate=datetime.datetime(2006, 1, 1),
-        # Do not pass values before this date
-        todate=datetime.datetime(2022, 12, 31),
-        # Do not pass values after this date
-        reverse=False)
+        fromdate=datetime.datetime(2020, 8, 17),
+        todate=datetime.datetime(2022, 11, 1),
+        nullvalue=0.0,
+        dtformat='%Y-%m-%d %H:%M:%S',
+        timeframe=bt.TimeFrame.Minutes,
+        datetime=0,
+        open = 1,
+        high = 2,
+        low = 3,
+        close = 4,
+        volume =5,
+        openinterest=-1)
 
     # Add the Data Feed to Cerebro
     cerebro.adddata(data)
