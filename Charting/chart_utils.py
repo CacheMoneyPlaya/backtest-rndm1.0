@@ -12,7 +12,7 @@ def chart_fvg(fvg_data_points, x_current):
     context = mpl_dates.date2num(x_current)
 
     # Extracting Data for plotting
-    data = pd.read_csv('Datasets/Data/btc_binance_datetime.csv').head(2000)
+    data = pd.read_csv('Datasets/Data/btc_binance_datetime.csv').head(3500)
     ohlc = data.loc[:, ['Date', 'Open', 'High', 'Low', 'Close']]
     ohlc['Date'] = pd.to_datetime(ohlc['Date'])
     ohlc['Date'] = ohlc['Date'].apply(mpl_dates.date2num)
@@ -35,8 +35,6 @@ def chart_fvg(fvg_data_points, x_current):
     fig.autofmt_xdate()
 
     fig.tight_layout()
-
-    print(fvg_data_points)
 
     for dp in fvg_data_points['delta_p']:
         if not dp['fvg_invalidated']:

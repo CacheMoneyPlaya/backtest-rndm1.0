@@ -2,7 +2,7 @@ from Utils import num_func as nf
 
 class Fvg():
 
-    FVG_DELTA_THRESHOLD = 0.5
+    FVG_DELTA_THRESHOLD = 1
 
     def __init__(self):
         self.fvg_tracker = {
@@ -18,7 +18,7 @@ class Fvg():
                 # Index through all data taking 3 at a time
                 self.get_movement_delta(chunk, i)
             except Exception as e:
-                raise
+                pass
 
         self.remove_invalidated_fvg_zones()
 
@@ -83,3 +83,48 @@ class Fvg():
                     'fvg_timestamp': chunk.datetime.datetime(index),
                     'fvg_chunk_index': index+2
                 })
+
+    def nearest_delta_n_fvg(self):
+        nearest_p_fvg = None
+        nearest_p_fvg_distance = 99999
+        for x in self.fvg_tracker['delta_n']:
+            if not x['fvg_invalidated'] and (x['fvg_low']-self.chunk.close[0]) < nearest_p_fvg_distance:
+                nearest_p_fvg = x
+
+        return nearest_p_fvg
+
+
+    def nearest_delta_p_fvg(self):
+        nearest_n_fvg = None
+        nearest_n_fvg_distance = 99999
+        for x in self.fvg_tracker['delta_p']:
+            if not x['fvg_invalidated'] and (self.chunk.close[0]-x['fvg_low']) < nearest_n_fvg_distance:
+                nearest_n_fvg = x
+
+        return nearest_n_fvg
+
+    def short(self):
+        fvg = self.nearest_delta_n_fvg()
+        acceptance = False
+
+        if fvg is not None and self.chunk.close[0] < fvg['fvg_low']:
+            if fvg['fvg_low'] < self.chunk.open[-1] and fvg['fvg_low'] < self.chunk.close[-1]:
+                acceptance = True
+
+        return {
+            'fvg': fvg,
+            'acceptance': acceptance
+        }
+
+    def long(self):
+        fvg = self.nearest_delta_p_fvg()
+        acceptance = False
+
+        if fvg is not None and self.chunk.close[0] > fvg['fvg_high']:
+            if fvg['fvg_high'] > self.chunk.open[-1] and fvg['fvg_high'] > self.chunk.close[-1]:
+                acceptance = True
+
+        return {
+            'fvg': fvg,
+            'acceptance': acceptance
+        }

@@ -67,4 +67,4 @@ def scrape_candles_to_csv(filename, exchange_id, max_retries, symbol, timeframe,
 
 # -----------------------------------------------------------------------------
 # Binance's BTC/USDT candles start on 2017-08-17
-scrape_candles_to_csv('btc_binance.csv', 'binance', 3, 'BTC/USDT', '30m', '2020-08-17T00:00:00Z', 100)
+scrape_candles_to_csv('btc_binance.csv', 'binance', 3, 'ATOM/USDT', '15m', '2021-08-17T00:00:00Z', 100)
