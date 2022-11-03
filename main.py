@@ -97,7 +97,7 @@ if __name__ == '__main__':
     cerebro.addstrategy(FvgContainAndReject)
 
     modpath = os.path.dirname(os.path.abspath(sys.argv[0]))
-    datapath = os.path.join(modpath, 'Datasets/Data/btc_binance_datetime.csv')
+    datapath = os.path.join(modpath, 'Datasets/Data/atom_binance_datetime.csv')
 
     data = bt.feeds.GenericCSVData(
             dataname=datapath,
