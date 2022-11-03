@@ -1,7 +1,7 @@
 
 # Backtesting Fair Value Gap trading strategy
 
-Backtesting of a fsir value gap trading strategy on a rolling 300 data point input
+Backtesting of a fair value gap trading strategy on a rolling 300 data point input
 
 ## TODO:
 - Move FVG shading anchor to start of detection date &#x2611;
