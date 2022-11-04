@@ -5,13 +5,14 @@ import pandas as pd
 def convert_from_unix_stamp(raw):
    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(raw) / 1000))
 
-out=open("Datasets/Data/algo_binance.csv","r")
-data=_csv.reader(out)
+def convert_unix_to_datetime(asset, exchange):
+    out=open("Datasets/Data/" + asset + "_" + exchange + ".csv", "r")
+    data=_csv.reader(out)
 
-data=[(convert_from_unix_stamp(row[0]),row[1],row[2],row[3],row[4],row[5]) for row in data]
-out.close()
+    data=[(convert_from_unix_stamp(row[0]),row[1],row[2],row[3],row[4],row[5]) for row in data]
+    out.close()
 
-a = pd.DataFrame(data)
-print(a)
+    a = pd.DataFrame(data)
+    a.to_csv("Datasets/Data/" + asset + "_" + exchange + "_datetime.csv", index=False, mode="w")
 
-a.to_csv("Datasets/Data/algo_binance_datetime.csv", index=False)
+    print('Data retrieval complete!')

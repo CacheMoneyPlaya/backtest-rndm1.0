@@ -3,6 +3,7 @@
 import os
 import sys
 import csv
+import Datasets.CSVExecutables.unix_to_datetime as unix_converter
 
 # -----------------------------------------------------------------------------
 
@@ -45,7 +46,10 @@ def scrape_ohlcv(exchange, max_retries, symbol, timeframe, since, limit):
 
 
 def write_to_csv(filename, data):
-    with open(filename, mode='w') as output_file:
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    target_dir = os.path.join(current_dir, '..', '..') + filename
+
+    with open(target_dir, mode='w') as output_file:
         csv_writer = csv.writer(output_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writerows(data)
 
@@ -64,7 +68,28 @@ def scrape_candles_to_csv(filename, exchange_id, max_retries, symbol, timeframe,
     write_to_csv(filename, ohlcv)
     print('Saved', len(ohlcv), 'candles from', exchange.iso8601(ohlcv[0][0]), 'to', exchange.iso8601(ohlcv[-1][0]), 'to', filename)
 
+def data_setup(config):
+    file_path = "/Datasets/Data/" + config["asset"] + "_" + config["exchange"] + ".csv"
+    file_name = config["asset"] + "_" + config["exchange"] + ".csv"
 
-# -----------------------------------------------------------------------------
-# Binance's BTC/USDT candles start on 2017-08-17
-scrape_candles_to_csv('/Datasets/Data/algo_binance.csv', 'binance', 3, 'ALGO/USDT', '5m', '2021-11-03T00:00:00Z', 100)
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    target_dir = os.path.join(current_dir, '../Data', file_name)
+
+    if not config['reuse_data'] or (config['reuse_data'] and not os.path.exists(target_dir)):
+        asset = config["asset"] + "/USDT"
+        full_start_time = config["starting_date"] + 'T00:00:00Z'
+
+        # Get the asset dataset
+        scrape_candles_to_csv(
+            file_path,
+            config['exchange'],
+            3,
+            asset,
+            config['timeframe'],
+            full_start_time,
+            100
+        )
+
+        unix_converter.convert_unix_to_datetime(config['asset'], config['exchange'])
+    else:
+        print('Reusing existing dataset')
