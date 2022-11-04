@@ -2,7 +2,7 @@ from Utils import num_func as nf
 
 class Fvg():
 
-    FVG_DELTA_THRESHOLD = 1
+    FVG_DELTA_THRESHOLD = 0.1
 
     def __init__(self):
         self.fvg_tracker = {
@@ -13,7 +13,7 @@ class Fvg():
     def cycle_chunk(self, chunk):
         self.reset_fvg_tracker()
         self.chunk = chunk
-        for i in range(-2000, 1, 1):
+        for i in range(-500, 1, 1):
             try:
                 # Index through all data taking 3 at a time
                 self.get_movement_delta(chunk, i)
