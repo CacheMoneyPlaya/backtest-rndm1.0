@@ -10,5 +10,5 @@ Backtesting of a fair value gap trading strategy on a rolling 300 data point inp
 - Build in entry/exit position commands + fit to 1:1.5 or something &#x2611;
 - Clean up a load of shit for plug and play of strats, bit messy atm as i was just wanting to get soemthing working lol
 
-![Backtest](https://github.com/CacheMoneyPlaya/backtest-rndm1.0/blob/main/Charts/Screenshot%202022-11-03%20at%2000.26.51.png?raw=true)
+![Backtest](https://github.com/CacheMoneyPlaya/backtest-rndm1.0/blob/main/Charts/Screenshot%202022-11-04%20at%2000.07.56.png?raw=true)
 ![FVG detection](https://github.com/CacheMoneyPlaya/backtest-rndm1.0/blob/main/Charts/Screenshot_2022-11-01_at_19.11.03.png?raw=true)
