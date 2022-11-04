@@ -41,17 +41,16 @@ if __name__ == '__main__':
             dtformat='%Y-%m-%d %H:%M:%S',
             timeframe=bt.TimeFrame.Minutes,
             datetime=0,
-            open = 1,
-            high = 2,
-            low = 3,
-            close = 4,
-            volume =5,
-            plot=False,
+            open=1,
+            high=2,
+            low=3,
+            close=4,
+            volume=5,
             openinterest=-1
         )
 
     cerebro.adddata(data)
-    cerebro.broker.setcash(1000.0)
+    cerebro.broker.setcash(2000.0)
     cerebro.broker.set_shortcash(False)
     cerebro.broker.setcommission(commission=0.0015, margin = None, mult = 10)
 

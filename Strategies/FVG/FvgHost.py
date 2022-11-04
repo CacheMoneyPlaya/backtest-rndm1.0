@@ -67,27 +67,23 @@ class FvgHost(bt.Strategy):
         except Exception as e:
             pass
 
-        if self.data_history_index > 500:
-
-            self.positioned = False
-
+        if self.data_history_index > 800:
+# (long_entry['fvg']['fvg_low'] + long_entry['fvg']['fvg_high']) / 2
             adjusted_size = 0.3*self.broker.getcash()/self.dataclose.close[0]
 
             self.fvg_data_points = self.fvg.cycle_chunk(self.dataclose)
             long_entry = self.fvg.long()
             short_entry = self.fvg.short()
 
-            if not self.position and not self.positioned and long_entry['acceptance']:
-                take_profit_price = 1.05 * self.dataclose.close[0]
-                stop_price = (long_entry['fvg']['fvg_low'] + long_entry['fvg']['fvg_high'])
+            if not self.position and long_entry['acceptance']:
+                take_profit_price = 1.02 * self.dataclose.close[0]
+                stop_price = long_entry['fvg']['fvg_low']
                 self.buy_bracket(size=adjusted_size, limitprice=take_profit_price, stopprice=stop_price, exectype=bt.Order.Market)
-                self.positioned = True
 
-            if not self.position and not self.positioned and short_entry['acceptance']:
-                take_profit_price = 0.95 * self.dataclose.close[0]
-                stop_price = (short_entry['fvg']['fvg_high'] + short_entry['fvg']['fvg_low'])
+            if not self.position and short_entry['acceptance']:
+                take_profit_price = 0.98 * self.dataclose.close[0]
+                stop_price = short_entry['fvg']['fvg_high']
                 self.sell_bracket(size=adjusted_size, limitprice=take_profit_price, stopprice=stop_price, exectype=bt.Order.Market)
-                self.positioned = True
 
             # if self.count == 3445:
             #     cu.chart_fvg(self.fvg_data_points, self.dataclose.datetime.datetime(0))
