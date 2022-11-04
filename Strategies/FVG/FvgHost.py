@@ -67,21 +67,19 @@ class FvgHost(bt.Strategy):
         except Exception as e:
             pass
 
-        if self.data_history_index > 800:
-# (long_entry['fvg']['fvg_low'] + long_entry['fvg']['fvg_high']) / 2
-            adjusted_size = 0.3*self.broker.getcash()/self.dataclose.close[0]
-
+        if self.data_history_index > 60:
+            adjusted_size = 0.2*self.broker.getcash()/self.dataclose.close[0]
             self.fvg_data_points = self.fvg.cycle_chunk(self.dataclose)
             long_entry = self.fvg.long()
             short_entry = self.fvg.short()
 
             if not self.position and long_entry['acceptance']:
-                take_profit_price = 1.02 * self.dataclose.close[0]
+                take_profit_price = 1.01 * self.dataclose.close[0]
                 stop_price = long_entry['fvg']['fvg_low']
                 self.buy_bracket(size=adjusted_size, limitprice=take_profit_price, stopprice=stop_price, exectype=bt.Order.Market)
 
             if not self.position and short_entry['acceptance']:
-                take_profit_price = 0.98 * self.dataclose.close[0]
+                take_profit_price = 0.99 * self.dataclose.close[0]
                 stop_price = short_entry['fvg']['fvg_high']
                 self.sell_bracket(size=adjusted_size, limitprice=take_profit_price, stopprice=stop_price, exectype=bt.Order.Market)
 

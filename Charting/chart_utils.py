@@ -12,7 +12,7 @@ def chart_fvg(fvg_data_points, x_current):
     context = mpl_dates.date2num(x_current)
 
     # Extracting Data for plotting
-    data = pd.read_csv('Datasets/Data/atom_binance_datetime.csv').head(3500)
+    data = pd.read_csv('Datasets/Data/ATOM_binance_datetime.csv').head(3500)
     ohlc = data.loc[:, ['Date', 'Open', 'High', 'Low', 'Close']]
     ohlc['Date'] = pd.to_datetime(ohlc['Date'])
     ohlc['Date'] = ohlc['Date'].apply(mpl_dates.date2num)

@@ -13,7 +13,7 @@ class FvgStrategy():
     def cycle_chunk(self, chunk):
         self.reset_fvg_tracker()
         self.chunk = chunk
-        for i in range(-800, 1, 1):
+        for i in range(-60, 1, 1):
             try:
                 # Index through all data taking 3 at a time
                 self.get_movement_delta(chunk, i)

@@ -50,7 +50,7 @@ if __name__ == '__main__':
         )
 
     cerebro.adddata(data)
-    cerebro.broker.setcash(2000.0)
+    cerebro.broker.setcash(10000.0)
     cerebro.broker.set_shortcash(False)
     cerebro.broker.setcommission(commission=0.0015, margin = None, mult = 10)
 
