@@ -2,7 +2,7 @@ from Utils import num_func as nf
 
 class FvgStrategy():
 
-    FVG_DELTA_THRESHOLD = 1
+    FVG_DELTA_THRESHOLD = 1.5
 
     def __init__(self):
         self.fvg_tracker = {

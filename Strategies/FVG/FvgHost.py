@@ -68,7 +68,7 @@ class FvgHost(bt.Strategy):
             pass
 
         if self.data_history_index > 60:
-            adjusted_size = 0.2*self.broker.getcash()/self.dataclose.close[0]
+            adjusted_size = 0.3*self.broker.getcash()/self.dataclose.close[0]
             self.fvg_data_points = self.fvg.cycle_chunk(self.dataclose)
             long_entry = self.fvg.long()
             short_entry = self.fvg.short()
